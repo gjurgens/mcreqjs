@@ -1,1 +1,1 @@
-# RequireJS multi-project manager
+# RequireJS multi-project manager [![Build Status](https://travis-ci.org/gjurgens/grunt-annotated-requirejsmcreqjs.png?branch=master)](https://travis-ci.org/gjurgens/mcreqjs)
