@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Jasmine Test Runner</title>
+
+    <!-- Jasmine -->
+    <link rel="stylesheet" type="text/css" href="vendor/jasmine/jasmine.css"/>
+    <script type="text/javascript" src="vendor/jasmine/jasmine.js"></script>
+    <script type="text/javascript" src="vendor/jasmine/jasmine-html.js"></script>
+
+    <!-- RequireJS -->
+    <script type="text/javascript" src="vendor/require.js"></script>
+    <script type="text/javascript" src="lib/mcreqjs.js"></script>
+
+  </head>
+
+  <body>
+    <script type="text/javascript">
+      require.config({
+        baseUrl: './',
+        urlArgs: "bust=" +  (new Date()).getTime()
+      });
+
+      require([
+        'spec/mcreqjs.spec.js'
+      ], function() {
+        jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+        jasmine.getEnv().execute();
+      });
+    </script>
+  </body>
+</html>

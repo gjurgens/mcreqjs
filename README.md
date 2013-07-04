@@ -1,0 +1,1 @@
+# RequireJS multi-project manager
