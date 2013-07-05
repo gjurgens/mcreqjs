@@ -23,7 +23,15 @@ module.exports = function(grunt) {
         jshintrc: '.jshintrc'
       }
     },
-
+    shell: {
+        test: {
+            command: 'node node_modules/jasmine-node/bin/jasmine-node --captureExceptions --verbose spec/mcreqjs.spec.js',
+            options: {
+              stdout: true,
+              failOnError: true
+            }
+        }
+    },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
@@ -48,8 +56,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-shell');
+
+  grunt.registerTask('test', ['shell:test']);
 
   // By default, lint and run all tests.
-  grunt.registerTask('default', ['jshint','clean','uglify']);
-
+  grunt.registerTask('default', ['jshint', 'test','clean','uglify']);
 };
