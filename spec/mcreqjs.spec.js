@@ -552,10 +552,14 @@ define(function() {
             });
 
             runs(function() {
-                mcReqJs.register({
+                var config = {
                     "id":"qux",
-                    "baseUrl":"spec/fixtures/qux"
-                });
+                    "baseUrl":"spec/fixtures/qux",
+                };
+                if(!inNodeJs) {
+                    config.urlArgs = "bust=" +  (new Date()).getTime();
+                }
+                mcReqJs.register(config);
             });
 
             it("qux shoud be registered after registering a project with no modules", function() {
