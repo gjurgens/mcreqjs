@@ -15,7 +15,9 @@ module.exports = function(grunt) {
     jshint: {
       all: [
         'Gruntfile.js',
-        'lib/*.js'
+        'package.json',
+        'lib/mcreqjs.js',
+        'spec/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -45,8 +47,9 @@ module.exports = function(grunt) {
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 
   // By default, lint and run all tests.
-  grunt.registerTask('default', ['clean','uglify']);
+  grunt.registerTask('default', ['jshint','clean','uglify']);
 
 };

@@ -1,4 +1,7 @@
 {
+  "bitwise":true,
+  "camelcase":true,
+  "trailing":true,
   "curly": true,
   "eqeqeq": true,
   "immed": true,
@@ -10,6 +13,17 @@
   "boss": true,
   "eqnull": true,
   "node": true,
-  "es5": true,
-  "loopfunc": true
+  "loopfunc": true,
+  "funcscope":false,
+  "globals":{
+    "define":true,
+    "requirejs":true
+  },
+  "predef":[
+    "mcReqJs",
+    "describe","expect","it","waitsFor","runs"
+  ],
+  "asi":false,
+  "boss":false,
+  "undef":true
 }

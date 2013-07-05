@@ -1,7 +1,6 @@
 var inNodeJs = false;
-if (typeof define !== 'function') { 
+if (typeof define !== 'function') {
     requirejs = require('requirejs');
-        requirejs = require('requirejs');
 
     define = require('amdefine')(module);
     require("../lib/mcreqjs");
@@ -11,8 +10,8 @@ if (typeof define !== 'function') {
             it("No Error",function() {
                 expect(err).toBeUndefined();
             });
-        });    
-    }
+        });
+    };
 }
 
 define(function() {
@@ -54,7 +53,7 @@ define(function() {
                         mainModule = main !== undefined ? main:null;
                         registered = true;
                     }
-                }
+                };
 
                 if(!inNodeJs) {
                     config.urlArgs = "bust=" +  (new Date()).getTime();
@@ -122,7 +121,7 @@ define(function() {
                         "callback":function(moduleC) {
                             cModule = moduleC !== undefined ? moduleC:null;
                         }
-                    })
+                    });
                 });
                 it("module-c should be loaded after manulay load it", function() {
                     waitsFor(function() {
@@ -141,7 +140,7 @@ define(function() {
                     expect(cModule.submodule.project).toEqual("foo");
                     expect(cModule.submodule.name).toEqual("module-b");
                 });
-            })
+            });
 
 
             describe("manualy loaded module D from folder baz", function(){
@@ -156,7 +155,7 @@ define(function() {
                         "callback":function(moduleD) {
                             dModule = moduleD !== undefined ? moduleD:null;
                         }
-                    })
+                    });
                 });
 
                 it("module-d in folder baz should be loaded after manulay load it", function() {
@@ -176,7 +175,7 @@ define(function() {
                     expect(dModule.submodule.project).toEqual("foo");
                     expect(dModule.submodule.name).toEqual("module-b");
                 });
-            })
+            });
         });
 
         describe("Project foo redefined",function() {
@@ -192,7 +191,7 @@ define(function() {
                         "modules":"main"
                     });
                 }).toThrow(new Error("mcReqJs.register: Project id: 'foo is allready taken."));
-            })
+            });
         });
 
         describe("Project bar",function() {
@@ -214,7 +213,7 @@ define(function() {
                         mainModule = main !== undefined ? main:null;
                         registered = true;
                     }
-                }
+                };
 
                 if(!inNodeJs) {
                     config.urlArgs = "bust=" +  (new Date()).getTime();
@@ -282,7 +281,7 @@ define(function() {
                         "callback":function(moduleC) {
                             cModule = moduleC !== undefined ? moduleC:null;
                         }
-                    })
+                    });
                 });
 
                 it("module-c should be loaded after manulay load it", function() {
@@ -302,7 +301,7 @@ define(function() {
                     expect(cModule.submodule.project).toEqual("bar");
                     expect(cModule.submodule.name).toEqual("module-b");
                 });
-            })
+            });
 
             describe("manualy loaded module D from folder baz", function(){
                 it("module-d should not be loaded before manulay loading", function() {
@@ -316,7 +315,7 @@ define(function() {
                         "callback":function(moduleD) {
                             dModule = moduleD !== undefined ? moduleD:null;
                         }
-                    })
+                    });
                 });
 
                 it("module-d in folder baz should be loaded after manulay load it", function() {
@@ -336,7 +335,7 @@ define(function() {
                     expect(dModule.submodule.project).toEqual("bar");
                     expect(dModule.submodule.name).toEqual("module-b");
                 });
-            })
+            });
         });
 
         describe("Project qux",function() {
