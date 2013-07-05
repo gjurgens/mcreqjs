@@ -747,6 +747,7 @@ define(function() {
 
         describe("Project qux loading modules with external project modules",function() {
             var cModule = null;
+            var eModule = null;
             var externalBarAModule = null;
             var externalFooAModule = null;
             it("qux shoud be registered before be used with external project modules", function() {
@@ -836,6 +837,48 @@ define(function() {
                     });
                 });
             });
+
+
+            describe("External bar module B loaded via qux module E using standard require", function() {
+                it("module-e should not be loaded before manulay loading", function() {
+                    expect(eModule).toEqual(null);
+                });
+
+                runs(function(){
+                    mcReqJs.load({
+                        "projectId":"qux",
+                        "modules":"module-e",
+                        "callback":function(moduleE) {
+                            eModule = moduleE !== undefined ? moduleE:null;
+                        }
+                    });
+                });
+
+                it("module-e should be loaded after manulay loading", function() {
+                    waitsFor(function() {
+                        return eModule !== null;
+                    }, "module-e registration timeout", 1000);
+
+                    runs(function() {
+                        expect(typeof eModule === "object").toBeTruthy();
+                        expect(eModule.project).toEqual("qux");
+                        expect(eModule.name).toEqual("module-e");
+                    });
+                });
+
+                it("submodule module-a should be loaded after manulay loading module-e using standard require", function() {
+                    expect(typeof eModule.getModuleA() === "object").toBeTruthy();
+                    expect(eModule.getModuleA().project).toEqual("qux");
+                    expect(eModule.getModuleA().name).toEqual("module-a");
+                });
+
+                it("submodule module-b should be loaded after manulay loading module-e using standard require", function() {
+                    expect(typeof eModule.getModuleA().submodule === "object").toBeTruthy();
+                    expect(eModule.getModuleA().submodule.project).toEqual("qux");
+                    expect(eModule.getModuleA().submodule.name).toEqual("module-b");
+                });
+            });
+
         });
     });
 });

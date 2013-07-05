@@ -4,6 +4,6 @@ define(["module-b","baz/module-d"],function(moduleB,moduleD) {
 		"name":"module-a",
 		"submodule":moduleB,
 		"submoduleInBaz":moduleD,
-		"project":"foo"
+		"project":"qux"
 	}
 })
