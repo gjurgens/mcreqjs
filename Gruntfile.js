@@ -58,8 +58,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-shell');
 
-  grunt.registerTask('test', ['shell:test']);
+  //Test alias
+  grunt.registerTask('test', ['jshint','shell:test']);
 
-  // By default, lint and run all tests.
-  grunt.registerTask('default', ['jshint', 'test','clean','uglify']);
+  // By default, lint, run all tests and build
+  grunt.registerTask('default', ['jshint', 'shell:test','clean','uglify']);
 };

@@ -40,7 +40,7 @@ define(function() {
             var dModule = null;
             var registered = false;
 
-            it("foo shoud not be registered before callin register", function() {
+            it("foo shoud not be registered before calling register", function() {
                 expect(mcReqJs.isRegistered("foo")).toBeFalsy();
             });
 
@@ -179,7 +179,7 @@ define(function() {
         });
 
         describe("Project foo redefined",function() {
-            it("foo shoud be registered before callin register", function() {
+            it("foo shoud be registered before calling register", function() {
                 expect(mcReqJs.isRegistered("foo")).toBeTruthy();
             });
 
@@ -691,6 +691,146 @@ define(function() {
                             "callback":{"callback":function(){}}
                         });
                 }).toThrow(new Error("mcReqJs.load: Invalid callback param type. Should be a function."));
+            });
+        });
+
+        describe("Project foo after other projects",function() {
+            var aModule = null;
+            it("foo shoud be registered before calling register", function() {
+                expect(mcReqJs.isRegistered("foo")).toBeTruthy();
+            });
+            describe("manualy loaded module A", function(){
+                it("module-a should not be loaded before manulay loading", function() {
+                    expect(aModule).toEqual(null);
+                });
+
+                runs(function(){
+                    mcReqJs.load({
+                        "projectId":"foo",
+                        "modules":"module-a",
+                        "callback":function(moduleA) {
+                            aModule = moduleA !== undefined ? moduleA:null;
+                        }
+                    });
+                });
+
+                it("module-a should be loaded after manulay load it", function() {
+                    waitsFor(function() {
+                        return aModule !== null;
+                    }, "module-a registration timeout", 1000);
+
+                    runs(function() {
+                        expect(typeof aModule === "object").toBeTruthy();
+                        expect(aModule.project).toEqual("foo");
+                        expect(aModule.name).toEqual("module-a");
+                    });
+                });
+
+                it("foo module-a submodule b shoud be loaded", function() {
+                    expect(typeof aModule.submodule === "object").toBeTruthy();
+                    expect(aModule.submodule.project).toEqual("foo");
+                    expect(aModule.submodule.name).toEqual("module-b");
+                });
+
+                it("foo module-a submodule in baz D shoud be loaded", function() {
+                    expect(typeof aModule.submoduleInBaz === "object").toBeTruthy();
+                    expect(aModule.submoduleInBaz.project).toEqual("foo");
+                    expect(aModule.submoduleInBaz.name).toEqual("module-d");
+                });
+            });
+        });
+
+
+        describe("Project qux loading modules with external project modules",function() {
+            var cModule = null;
+            var externalBarAModule = null;
+            var externalFooAModule = null;
+            it("qux shoud be registered before be used with external project modules", function() {
+                expect(mcReqJs.isRegistered("qux")).toBeTruthy();
+            });
+            it("foo shoud be registered before be used as external project", function() {
+                expect(mcReqJs.isRegistered("foo")).toBeTruthy();
+            });
+            describe("manualy loaded module C", function(){
+                it("module-c should not be loaded before manulay loading", function() {
+                    expect(cModule).toEqual(null);
+                });
+
+                runs(function(){
+                    mcReqJs.load({
+                        "projectId":"qux",
+                        "modules":"module-c",
+                        "callback":function(moduleC) {
+                            cModule = moduleC !== undefined ? moduleC:null;
+                        }
+                    });
+                });
+
+                it("module-c should be loaded after manulay load it", function() {
+                    waitsFor(function() {
+                        return cModule !== null;
+                    }, "module-c registration timeout", 1000);
+
+                    runs(function() {
+                        expect(typeof cModule === "object").toBeTruthy();
+                        expect(cModule.project).toEqual("qux");
+                        expect(cModule.name).toEqual("module-c");
+                    });
+                });
+            });
+
+            describe("External bar module A loaded via qux module C", function(){
+ 
+                it("qux module C should be loaded", function() {
+                    expect(typeof cModule === "object").toBeTruthy();
+                    expect(cModule.project).toEqual("qux");
+                    expect(cModule.name).toEqual("module-c");
+                });
+
+                it("External bar module A should be loaded after manulay load qux module C", function() {
+                    waitsFor(function() {
+                        externalBarAModule = cModule.getExternalProjectBarModuleA();
+                        return externalBarAModule !== null;
+                    }, "external bar module-c registration timeout", 1000);
+
+                    runs(function() {
+                        expect(typeof externalBarAModule === "object").toBeTruthy();
+                        expect(externalBarAModule.project).toEqual("bar");
+                        expect(externalBarAModule.name).toEqual("module-a");
+                    });
+                });
+
+                it("External bar module A submodule B should be loaded after manulay load qux module C", function() {
+                    expect(typeof externalBarAModule.submodule === "object").toBeTruthy();
+                    expect(externalBarAModule.submodule.project).toEqual("bar");
+                    expect(externalBarAModule.submodule.name).toEqual("module-b");
+                });
+
+                it("External bar module A submoduleInBaz D should be loaded after manulay load qux module C", function() {
+                    expect(typeof externalBarAModule.submoduleInBaz === "object").toBeTruthy();
+                    expect(externalBarAModule.submoduleInBaz.project).toEqual("bar");
+                    expect(externalBarAModule.submoduleInBaz.name).toEqual("module-d");
+                });
+
+                it("External bar module A submoduleInBaz D submodule B should be loaded after manulay load qux module C", function() {
+                    expect(typeof externalBarAModule.submoduleInBaz.submodule === "object").toBeTruthy();
+                    expect(externalBarAModule.submoduleInBaz.submodule.project).toEqual("bar");
+                    expect(externalBarAModule.submoduleInBaz.submodule.name).toEqual("module-b");
+                });
+
+
+                it("External foo module A loaded via external bar module A should be loaded after manulay load qux module C", function() {
+                    waitsFor(function() {
+                        externalFooAModule = externalBarAModule.getExternalProjectFooModuleA();
+                        return externalFooAModule !== null;
+                    }, "external bar module-c registration timeout", 1000);
+
+                    runs(function() {
+                        expect(typeof externalFooAModule === "object").toBeTruthy();
+                        expect(externalFooAModule.project).toEqual("foo");
+                        expect(externalFooAModule.name).toEqual("module-a");
+                    });
+                });
             });
         });
     });
