@@ -40,6 +40,7 @@ module.exports = function(grunt) {
           'LICENCE: <%= pkg.licenses[0].type %> (<%= pkg.licenses[0].url %>)' +
           '*/\n',
         sourceMap: 'build/mcreqjs-map.js',
+        sourceMappingURL: 'https://raw.github.com/gjurgens/mcreqjs/master/lib/mcreqjs-map.js'
       },
       build: {
         src: 'lib/mcreqjs.js',
