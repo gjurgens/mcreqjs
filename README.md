@@ -7,18 +7,61 @@ Handle multiple RequireJS configurations on the same environment.
 This library is for applications that needs multiple projects using RequireJS to be loaded on the same environment, keeping their configurations isolated, avoiding conflicts between them.
 
 ## For example
-### Project foo
+### Files
 ```
 /foo/
 	/baz/
-    	/module-d.js
+    	/module-b.js
     /main.js
     /module-a.js
-    /module-b-js
-    /module-c.js
-
+/bar/
+	/baz/
+    	/module-b.js
+    /main.js
+    /module-a.js
+/qux/
+	/module-a.js
+    /module-b.js
+/index.html
 ```
-#### main.js
+#### index.html
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>mcReqJs Sample</title>
+    <script type="text/javascript" src="lib/require-1.0.7.js"></script>
+    <script type="text/javascript" src="lib/mcreqjs-0.0.1.js"></script>
+  </head>
+  <h1>HTML Stuff</h1>
+  <body>
+    <script type="text/javascript">
+      mcReqJs.register({
+        "id":"bar",
+        "baseUrl":"/bar",
+        "modules":"main"
+      });
+    </script>
+    <script type="text/javascript">
+      mcReqJs.register({
+        "id":"foo",
+        "baseUrl":"/foo",
+        "modules":"main"
+      });
+    </script>
+    <script type="text/javascript">
+      mcReqJs.register({
+        "id":"qux",
+        "baseUrl":"/qux"
+      });
+    </script>
+  </body>
+</html>
+```
+First it loads RequireJS an mcReqJs libraries on the head tag, and later declares tree different AMD javascript libraries, with a different configuration for each one. Foo and Bar loads it's main modules after registering, and Qux, only registers it's baseUrl and id.
+
+### Foo JavaScript Project
+#### foo/main.js
 ```js
 define(["module-a"], function(moduleA) {
 	return {
@@ -28,49 +71,81 @@ define(["module-a"], function(moduleA) {
 	};
 });
 ```
-#### module-a.js
+#### foo/module-a.js
 ```js
-define(["module-b","baz/module-d"],function(moduleB,moduleD) {
+define(["baz/module-b"],function(moduleB) {
 	return {
-		"speak":function() {console.log("project: foo; module: A")},
 		"name":"module-a",
 		"submodule":moduleB,
-		"submoduleInBaz":moduleD,
 		"project":"foo"
 	}
 });
 ```
-#### module-b.js
+#### foo/baz/module-b.js
 ```js
 define(function() {
 	return {
-		"speak":function() {console.log("project: foo; module: B")},
 		"name":"module-b",
 		"project":"foo"
 	}
 });
 ```
-#### module-c.js
+
+### Bar JavaScript Project
+#### bar/main.js
 ```js
-define(["module-b"],function(moduleB) {
+define(["module-a"], function(moduleA) {
 	return {
-		"speak":function() {console.log("project: foo; module: C")},
-		"name":"module-c",
+		"name":"main",
+		"submodule":moduleA,
+		"project":"bar"
+	};
+});
+```
+#### bar/module-a.js
+```js
+define(["baz/module-b"],function(moduleB) {
+	//Loading an external project module
+	mcReqJs.load({
+        "projectId":"qux",
+        "modules":"module-a",
+        "callback":function(moduleA) {
+        	externalAModule = moduleA;
+        }
+    });
+	return {
+		"name":"module-a",
 		"submodule":moduleB,
-		"project":"foo"
+		"project":"bar"
 	}
-})
+});
 ```
-
-
-### Project bar
+#### bar/baz/module-b.js
+```js
+define(function() {
+	return {
+		"name":"module-b",
+		"project":"bar"
+	}
+});
 ```
-/foo/
-	/baz/
-    	/module-d.js
-    /main.js
-    /module-a.js
-    /module-b-js
-    /module-c.js
-
+### Qux JavaScript Project
+#### qux/module-a.js
+```js
+define(["module-b"], function(moduleB) {
+	return {
+		"name":"module-a",
+		"submodule":moduleB,
+		"project":"qux"
+	};
+});
+```
+#### qux/module-b.js
+```js
+define(function() {
+	return {
+		"name":"module-b",
+		"project":"qux"
+	}
+});
 ```
