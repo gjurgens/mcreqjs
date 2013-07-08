@@ -32,6 +32,16 @@ module.exports = function(grunt) {
             }
         }
     },
+    concat: {
+      options: {
+        banner: '/*!\n * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+        ' * Author: <%= pkg.author.name %> (<%= pkg.author.url %>)\n */\n\n'
+      },
+      dist: {
+        src: ['LICENSE-MIT.js','lib/mcreqjs.js'],
+        dest: 'dist/mcreqjs.js'
+      }
+    },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
@@ -58,10 +68,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-shell');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
   //Test alias
   grunt.registerTask('test', ['jshint','shell:test']);
 
   // By default, lint, run all tests and build
-  grunt.registerTask('default', ['jshint', 'shell:test','clean','uglify']);
+  grunt.registerTask('default', ['jshint', 'shell:test','clean','concat','uglify']);
 };
