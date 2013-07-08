@@ -37,18 +37,18 @@ module.exports = function(grunt) {
         banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
           '<%= grunt.template.today("yyyy-mm-dd") %> - ' +
           'AUTHOR: <%= pkg.author.name %> (<%= pkg.author.url %>) - ' +
-          'LICENCE: <%= pkg.licenses[0].type %> (<%= pkg.licenses[0].url %>)' +
+          'LICENCE: <%= pkg.licenses[0].type %> (<%= pkg.repository.url %>/<%= pkg.version %>/<%= pkg.licenses[0].file %>)' +
           '*/\n',
-        sourceMap: 'build/mcreqjs-map.js',
-        sourceMappingURL: 'https://raw.github.com/gjurgens/mcreqjs/master/lib/mcreqjs-map.js'
+        sourceMap: 'dist/mcreqjs-map.js',
+        sourceMappingURL: '<%= pkg.repository.url %>/<%= pkg.version %>/dist/mcreqjs-map.js'
       },
-      build: {
+      dist: {
         src: 'lib/mcreqjs.js',
-        dest: 'build/mcreqjs.min.js'
+        dest: 'dist/mcreqjs.min.js'
       }
     },
     clean: {
-      test: ['build']
+      test: ['dist']
     }
   });
 

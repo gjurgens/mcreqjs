@@ -1,4 +1,4 @@
-# RequireJS multi-project manager [![Build Status](https://travis-ci.org/gjurgens/mcreqjs.png?branch=master)](https://travis-ci.org/gjurgens/mcreqjs)
+# mcReqJs (Multiple Configurations RequireJS) [![Build Status](https://travis-ci.org/gjurgens/mcreqjs.png?branch=master)](https://travis-ci.org/gjurgens/mcreqjs)
 
 Handle multiple RequireJS configurations on the same environment.
 
