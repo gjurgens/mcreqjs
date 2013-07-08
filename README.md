@@ -1,5 +1,5 @@
-# mcReqJs (Multiple Configurations RequireJS) [![Build Status](https://travis-ci.org/gjurgens/mcreqjs.png?branch=master)](https://travis-ci.org/gjurgens/mcreqjs)
-
+# mcReqJs [![Build Status](https://travis-ci.org/gjurgens/mcreqjs.png?branch=master)](https://travis-ci.org/gjurgens/mcreqjs)
+####(Multiple Configurations RequireJS)
 Handle multiple RequireJS configurations on the same environment.
 
 This library is for applications that needs multiple projects using RequireJS to be loaded on the same environment, keeping their configurations isolated, avoiding conflicts between them.
