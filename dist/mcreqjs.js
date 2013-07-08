@@ -1,5 +1,7 @@
 /*!
  * mcReqJs - v0.1.0-beta - 2013-07-08
+ * (Handle mutiple projects using different RequireJs configuration and context on the same ambient)
+ *
  * Author: Gabriel Jürgens (https://github.com/gjurgens/)
  */
 

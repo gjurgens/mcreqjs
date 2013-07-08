@@ -35,6 +35,7 @@ module.exports = function(grunt) {
     concat: {
       options: {
         banner: '/*!\n * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+        ' * (<%= pkg.description %>)\n *\n' +
         ' * Author: <%= pkg.author.name %> (<%= pkg.author.url %>)\n */\n\n'
       },
       dist: {
