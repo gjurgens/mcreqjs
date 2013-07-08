@@ -2,11 +2,71 @@
 
 Handle multiple RequireJS configurations on the same environment.
 
-## Getting Started
-
 This library is for applications that needs multiple projects using RequireJS to be loaded on the same environment, keeping their configurations isolated, avoiding conflicts between them.
 
-## For example
+## Getting Started
+The first thing, is to register the project with an `id`.
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>mcReqJs Sample</title>
+    <script type="text/javascript" src="lib/require-1.0.7.js"></script>
+    <script type="text/javascript" src="lib/mcreqjs-0.0.1.js"></script>
+  </head>
+  <h1>mcRequireJs</h1>
+  <body>
+    <script type="text/javascript">
+      mcReqJs.register({
+        "id":"bar",
+        "baseUrl":"/bar",
+        "modules":"main"
+      });
+    </script>
+  </body>
+</html>
+```
+`mcReqJs.register` is the equivalent to `requirejs.config`. It accepts the same options as requirejs. The only additional and mandatory param is `id`. This param is defined with the reqister method, and then is used to identify the instance of this project on other calls to mcReqJs. Internally, this is an alias to the `context` RequireJs config param. You can still define a `context`, but it should contains the same value as `id`.
+
+AMD modules are defined as usual. The only differenece, is that if you need to require another module asynchronously, instead of using `require` function, is recomended to use `mcReqJs.load`, or beter, if it's not strictly necessary, you shoud load the dependency on the `define` function.
+
+```js
+//main module defined on Foo project.
+define(["bar"],function(bar) {
+	//Loading an external project module
+    var fooModule = "not yet loaded";
+	mcReqJs.load({
+        "projectId":"qux",
+        "modules":"foo",
+        "callback":function(foo) {
+        	fooModule = foo;
+        }
+    });
+    var getFooModule = function() {
+    	return fooModule;
+    }
+	return {
+		"name":"bar",
+		"submodule":bar,
+		"project":"baz",
+        "foo":getFooModule
+	}
+});
+```
+
+## Methods
+##### `mcReqJs.isRegistered("projectId")`
+Returns `true` if the project is defined on mcReqJs or `false` if it is not.
+##### `mcReqJs.register(options)`
+Is the same config object passed to `requirejs` with an additional mandatory param: `id` which defines the id identify an AMD JavaScript project. `id` is an alias to the `context` param. If both are declared, the should have the same value, if not, an exception is thrown.
+
+`modules` param, could be a string or an array of string with the modules to be loaded on the same moment of registration. They will be passed as params to the `callback` function. This param is not mandatory, so, if you only need to register a project but not load any module at this time, you can ignore this param.
+
+`callback` param is the function that will be called after registering the new project and loading all the `modules`.
+
+##### `mcReqJs.load`
+
+## Sample Application
 ### Files
 ```
 /foo/
