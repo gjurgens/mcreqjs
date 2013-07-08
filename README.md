@@ -58,13 +58,23 @@ define(["bar"],function(bar) {
 ##### `mcReqJs.isRegistered("projectId")`
 Returns `true` if the project is defined on mcReqJs or `false` if it is not.
 ##### `mcReqJs.register(options)`
-Is the same config object passed to `requirejs` with an additional mandatory param: `id` which defines the id identify an AMD JavaScript project. `id` is an alias to the `context` param. If both are declared, the should have the same value, if not, an exception is thrown.
+`options` Is the same config object passed to `requirejs` with an additional mandatory param: `id` which defines the id identify an AMD JavaScript project. 
 
-`modules` param, could be a string or an array of string with the modules to be loaded on the same moment of registration. They will be passed as params to the `callback` function. This param is not mandatory, so, if you only need to register a project but not load any module at this time, you can ignore this param.
+`options.id` is an alias to the `options.context` param. If both are declared, the should have the same value, if not, an exception is thrown. This id identifies the javascript project being loaded, and grants the independent configuration from other AMD projects.
 
-`callback` param is the function that will be called after registering the new project and loading all the `modules`.
+`options.modules` param, could be a string or an array of string with the modules to be loaded on the same moment of registration. They will be passed as params to the
+`options.callback` function. This param is not mandatory, so, if you only need to register a project but not load any module at this time, you can ignore this param.
 
-##### `mcReqJs.load`
+`options.callback` param is the function that will be called after registering the new project and loading all the `options.modules`. This function receives the return of each module as a param.
+
+`options.baseUrl` is the same as de config param from RequireJs, and is mandatory.
+
+##### `mcReqJs.load(options)`
+`options.projectId` is the id of the project registered with the `mcReqJs.register` method. It's mandatory, and should be registred before calling this method.
+
+`options.modules` param, could be a string or an array of string with the modules to be loaded. They will be passed as params to the `options.callback` function. This param is mandatory.
+
+`options.callback` param is the function that will be called after all the `options.modules` are loaded. This function receives the return of each module as a param.
 
 ## Sample Application
 ### Files
