@@ -1,0 +1,319 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mcreqjs by gjurgens</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/gjurgens/mcreqjs">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/gjurgens/mcreqjs/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/gjurgens/mcreqjs/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Mcreqjs</h1>
+          <p>RequireJs helper to manage multiple configurations on the same environment</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/gjurgens">gjurgens</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a name="mcreqjs-" class="anchor" href="#mcreqjs-"><span class="octicon octicon-link"></span></a>mcReqJs <a href="https://travis-ci.org/gjurgens/mcreqjs"><img src="https://travis-ci.org/gjurgens/mcreqjs.png?branch=master" alt="Build Status"></a>
+</h1>
+
+<h4>
+<a name="multiple-configurations-requirejs" class="anchor" href="#multiple-configurations-requirejs"><span class="octicon octicon-link"></span></a>(Multiple Configurations RequireJS)</h4>
+
+<p>Handle multiple RequireJS configurations on the same environment.</p>
+
+<p>This library is for applications that needs multiple projects using RequireJS to be loaded on the same environment, keeping their configurations isolated, avoiding conflicts between them.</p>
+
+<h2>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting Started</h2>
+
+<p>The first thing, is to register the project with an <code>id</code>.</p>
+
+<div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>mcReqJs Sample<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"lib/require-1.0.7.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"lib/mcreqjs-0.0.1.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>mcRequireJs<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+      <span class="nx">mcReqJs</span><span class="p">.</span><span class="nx">register</span><span class="p">({</span>
+        <span class="s2">"id"</span><span class="o">:</span><span class="s2">"bar"</span><span class="p">,</span>
+        <span class="s2">"baseUrl"</span><span class="o">:</span><span class="s2">"/bar"</span><span class="p">,</span>
+        <span class="s2">"modules"</span><span class="o">:</span><span class="s2">"main"</span>
+      <span class="p">});</span>
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+<p><code>mcReqJs.register</code> is the equivalent to <code>requirejs.config</code>. It accepts the same options as requirejs. The only additional and mandatory param is <code>id</code>. This param is defined with the reqister method, and then is used to identify the instance of this project on other calls to mcReqJs. Internally, this is an alias to the <code>context</code> RequireJs config param. You can still define a <code>context</code>, but it should contains the same value as <code>id</code>.</p>
+
+<p>AMD modules are defined as usual. The only differenece, is that if you need to require another module asynchronously, instead of using <code>require</code> function, is recomended to use <code>mcReqJs.load</code>, or beter, if it's not strictly necessary, you shoud load the dependency on the <code>define</code> function.</p>
+
+<div class="highlight"><pre><span class="c1">//main module defined on Foo project.</span>
+<span class="nx">define</span><span class="p">([</span><span class="s2">"bar"</span><span class="p">],</span><span class="kd">function</span><span class="p">(</span><span class="nx">bar</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//Loading an external project module</span>
+    <span class="kd">var</span> <span class="nx">fooModule</span> <span class="o">=</span> <span class="s2">"not yet loaded"</span><span class="p">;</span>
+    <span class="nx">mcReqJs</span><span class="p">.</span><span class="nx">load</span><span class="p">({</span>
+        <span class="s2">"projectId"</span><span class="o">:</span><span class="s2">"qux"</span><span class="p">,</span>
+        <span class="s2">"modules"</span><span class="o">:</span><span class="s2">"foo"</span><span class="p">,</span>
+        <span class="s2">"callback"</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">foo</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">fooModule</span> <span class="o">=</span> <span class="nx">foo</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="kd">var</span> <span class="nx">getFooModule</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">fooModule</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="o">:</span><span class="s2">"bar"</span><span class="p">,</span>
+        <span class="s2">"submodule"</span><span class="o">:</span><span class="nx">bar</span><span class="p">,</span>
+        <span class="s2">"project"</span><span class="o">:</span><span class="s2">"baz"</span><span class="p">,</span>
+        <span class="s2">"foo"</span><span class="o">:</span><span class="nx">getFooModule</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="methods" class="anchor" href="#methods"><span class="octicon octicon-link"></span></a>Methods</h2>
+
+<h5>
+<a name="mcreqjsisregisteredprojectid" class="anchor" href="#mcreqjsisregisteredprojectid"><span class="octicon octicon-link"></span></a><code>mcReqJs.isRegistered("projectId")</code>
+</h5>
+
+<p>Returns <code>true</code> if the project is defined on mcReqJs or <code>false</code> if it is not.</p>
+
+<h5>
+<a name="mcreqjsregisteroptions" class="anchor" href="#mcreqjsregisteroptions"><span class="octicon octicon-link"></span></a><code>mcReqJs.register(options)</code>
+</h5>
+
+<p><code>options</code> Is the same config object passed to <code>requirejs</code> with an additional mandatory param: <code>id</code> which defines the id identify an AMD JavaScript project. </p>
+
+<p><code>options.id</code> is an alias to the <code>options.context</code> param. If both are declared, the should have the same value, if not, an exception is thrown. This id identifies the javascript project being loaded, and grants the independent configuration from other AMD projects.</p>
+
+<p><code>options.modules</code> param, could be a string or an array of string with the modules to be loaded on the same moment of registration. They will be passed as params to the
+<code>options.callback</code> function. This param is not mandatory, so, if you only need to register a project but not load any module at this time, you can ignore this param.</p>
+
+<p><code>options.callback</code> param is the function that will be called after registering the new project and loading all the <code>options.modules</code>. This function receives the return of each module as a param.</p>
+
+<p><code>options.baseUrl</code> is the same as de config param from RequireJs, and is mandatory.</p>
+
+<h5>
+<a name="mcreqjsloadoptions" class="anchor" href="#mcreqjsloadoptions"><span class="octicon octicon-link"></span></a><code>mcReqJs.load(options)</code>
+</h5>
+
+<p><code>options.projectId</code> is the id of the project registered with the <code>mcReqJs.register</code> method. It's mandatory, and should be registred before calling this method.</p>
+
+<p><code>options.modules</code> param, could be a string or an array of string with the modules to be loaded. They will be passed as params to the <code>options.callback</code> function. This param is mandatory.</p>
+
+<p><code>options.callback</code> param is the function that will be called after all the <code>options.modules</code> are loaded. This function receives the return of each module as a param.</p>
+
+<h2>
+<a name="sample-application" class="anchor" href="#sample-application"><span class="octicon octicon-link"></span></a>Sample Application</h2>
+
+<h3>
+<a name="files" class="anchor" href="#files"><span class="octicon octicon-link"></span></a>Files</h3>
+
+<pre><code>/foo/
+    /baz/
+        /module-b.js
+    /main.js
+    /module-a.js
+/bar/
+    /baz/
+        /module-b.js
+    /main.js
+    /module-a.js
+/qux/
+    /module-a.js
+    /module-b.js
+/index.html
+</code></pre>
+
+<h4>
+<a name="indexhtml" class="anchor" href="#indexhtml"><span class="octicon octicon-link"></span></a>index.html</h4>
+
+<div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>mcReqJs Sample<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"lib/require-1.0.7.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"lib/mcreqjs-0.0.1.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+      <span class="nx">mcReqJs</span><span class="p">.</span><span class="nx">register</span><span class="p">({</span>
+        <span class="s2">"id"</span><span class="o">:</span><span class="s2">"qux"</span><span class="p">,</span>
+        <span class="s2">"baseUrl"</span><span class="o">:</span><span class="s2">"/qux"</span>
+      <span class="p">});</span>
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>HTML Stuff<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+      <span class="nx">mcReqJs</span><span class="p">.</span><span class="nx">register</span><span class="p">({</span>
+        <span class="s2">"id"</span><span class="o">:</span><span class="s2">"bar"</span><span class="p">,</span>
+        <span class="s2">"baseUrl"</span><span class="o">:</span><span class="s2">"/bar"</span><span class="p">,</span>
+        <span class="s2">"modules"</span><span class="o">:</span><span class="s2">"main"</span>
+      <span class="p">});</span>
+    <span class="nt">&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+      <span class="nx">mcReqJs</span><span class="p">.</span><span class="nx">register</span><span class="p">({</span>
+        <span class="s2">"id"</span><span class="o">:</span><span class="s2">"foo"</span><span class="p">,</span>
+        <span class="s2">"baseUrl"</span><span class="o">:</span><span class="s2">"/foo"</span><span class="p">,</span>
+        <span class="s2">"modules"</span><span class="o">:</span><span class="s2">"main"</span>
+      <span class="p">});</span>
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+<p>First it loads RequireJS an mcReqJs libraries on the head tag, and later declares tree different AMD javascript libraries, with a different configuration for each one. Foo and Bar loads it's main modules after registering, and Qux, only registers it's baseUrl and id. Qux project is registered on the head tag, because project Bar has a module that depends on it. Project Qux has no module defined on the register method, so, registering it on the head tag, should not have any performance impact.</p>
+
+<h3>
+<a name="foo-javascript-project" class="anchor" href="#foo-javascript-project"><span class="octicon octicon-link"></span></a>Foo JavaScript Project</h3>
+
+<p>This is a 3 AMD modules sample project. Main module is loaded on the register method on index.html, and it starts the chanin of dependencies, loading module B who loads module C located on folder baz. Keep in mind is that all dependencies are relative to the baseUrl defined on index.html</p>
+
+<h4>
+<a name="foomainjs" class="anchor" href="#foomainjs"><span class="octicon octicon-link"></span></a>foo/main.js</h4>
+
+<div class="highlight"><pre><span class="nx">define</span><span class="p">([</span><span class="s2">"module-a"</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">moduleA</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="o">:</span><span class="s2">"main"</span><span class="p">,</span>
+        <span class="s2">"submodule"</span><span class="o">:</span><span class="nx">moduleA</span><span class="p">,</span>
+        <span class="s2">"project"</span><span class="o">:</span><span class="s2">"foo"</span>
+    <span class="p">};</span>
+<span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="foomodule-ajs" class="anchor" href="#foomodule-ajs"><span class="octicon octicon-link"></span></a>foo/module-a.js</h4>
+
+<div class="highlight"><pre><span class="nx">define</span><span class="p">([</span><span class="s2">"baz/module-b"</span><span class="p">],</span><span class="kd">function</span><span class="p">(</span><span class="nx">moduleB</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="o">:</span><span class="s2">"module-a"</span><span class="p">,</span>
+        <span class="s2">"submodule"</span><span class="o">:</span><span class="nx">moduleB</span><span class="p">,</span>
+        <span class="s2">"project"</span><span class="o">:</span><span class="s2">"foo"</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="foobazmodule-bjs" class="anchor" href="#foobazmodule-bjs"><span class="octicon octicon-link"></span></a>foo/baz/module-b.js</h4>
+
+<div class="highlight"><pre><span class="nx">define</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="o">:</span><span class="s2">"module-b"</span><span class="p">,</span>
+        <span class="s2">"project"</span><span class="o">:</span><span class="s2">"foo"</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="bar-javascript-project" class="anchor" href="#bar-javascript-project"><span class="octicon octicon-link"></span></a>Bar JavaScript Project</h3>
+
+<p>This project has the same structure an dependencies chain that Foo. The only difference is that module A loads a module from de Qux project using the load method.</p>
+
+<h4>
+<a name="barmainjs" class="anchor" href="#barmainjs"><span class="octicon octicon-link"></span></a>bar/main.js</h4>
+
+<div class="highlight"><pre><span class="nx">define</span><span class="p">([</span><span class="s2">"module-a"</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">moduleA</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="o">:</span><span class="s2">"main"</span><span class="p">,</span>
+        <span class="s2">"submodule"</span><span class="o">:</span><span class="nx">moduleA</span><span class="p">,</span>
+        <span class="s2">"project"</span><span class="o">:</span><span class="s2">"bar"</span>
+    <span class="p">};</span>
+<span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="barmodule-ajs" class="anchor" href="#barmodule-ajs"><span class="octicon octicon-link"></span></a>bar/module-a.js</h4>
+
+<div class="highlight"><pre><span class="nx">define</span><span class="p">([</span><span class="s2">"baz/module-b"</span><span class="p">],</span><span class="kd">function</span><span class="p">(</span><span class="nx">moduleB</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//Loading an external project module</span>
+    <span class="nx">mcReqJs</span><span class="p">.</span><span class="nx">load</span><span class="p">({</span>
+        <span class="s2">"projectId"</span><span class="o">:</span><span class="s2">"qux"</span><span class="p">,</span>
+        <span class="s2">"modules"</span><span class="o">:</span><span class="s2">"module-a"</span><span class="p">,</span>
+        <span class="s2">"callback"</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">moduleA</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">externalAModule</span> <span class="o">=</span> <span class="nx">moduleA</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="o">:</span><span class="s2">"module-a"</span><span class="p">,</span>
+        <span class="s2">"submodule"</span><span class="o">:</span><span class="nx">moduleB</span><span class="p">,</span>
+        <span class="s2">"project"</span><span class="o">:</span><span class="s2">"bar"</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="barbazmodule-bjs" class="anchor" href="#barbazmodule-bjs"><span class="octicon octicon-link"></span></a>bar/baz/module-b.js</h4>
+
+<div class="highlight"><pre><span class="nx">define</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="o">:</span><span class="s2">"module-b"</span><span class="p">,</span>
+        <span class="s2">"project"</span><span class="o">:</span><span class="s2">"bar"</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="qux-javascript-project" class="anchor" href="#qux-javascript-project"><span class="octicon octicon-link"></span></a>Qux JavaScript Project</h3>
+
+<p>This Project is referenced from Bar project.</p>
+
+<h4>
+<a name="quxmodule-ajs" class="anchor" href="#quxmodule-ajs"><span class="octicon octicon-link"></span></a>qux/module-a.js</h4>
+
+<div class="highlight"><pre><span class="nx">define</span><span class="p">([</span><span class="s2">"module-b"</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">moduleB</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="o">:</span><span class="s2">"module-a"</span><span class="p">,</span>
+        <span class="s2">"submodule"</span><span class="o">:</span><span class="nx">moduleB</span><span class="p">,</span>
+        <span class="s2">"project"</span><span class="o">:</span><span class="s2">"qux"</span>
+    <span class="p">};</span>
+<span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="quxmodule-bjs" class="anchor" href="#quxmodule-bjs"><span class="octicon octicon-link"></span></a>qux/module-b.js</h4>
+
+<div class="highlight"><pre><span class="nx">define</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="o">:</span><span class="s2">"module-b"</span><span class="p">,</span>
+        <span class="s2">"project"</span><span class="o">:</span><span class="s2">"qux"</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
