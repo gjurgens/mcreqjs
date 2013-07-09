@@ -3,7 +3,7 @@
   "description": "Handle mutiple projects using different RequireJs configuration and context on the same ambient",
   "homepage": "https://github.com/gjurgens/mcreqjs",
   "author": {
-    "name": "Gabriel Jürgens",
+    "name": "Gabriel Jurgens",
     "url": "https://github.com/gjurgens/"
   },
   "version": "0.1.0-beta",
