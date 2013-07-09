@@ -51,7 +51,7 @@ module.exports = function(grunt) {
           'LICENCE: https://raw.github.com/gjurgens/mcreqjs/<%= pkg.version %>/<%= pkg.licenses[0].file %>)' +
           '*/\n',
         sourceMap: 'dist/mcreqjs-map.js',
-        sourceMapRoot: 'dist/mcreqjs.js',
+        sourceMapPrefix: 1,
         sourceMappingURL: 'https://raw.github.com/gjurgens/mcreqjs/<%= pkg.version %>/dist/mcreqjs-map.js'
       },
       dist: {
