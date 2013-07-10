@@ -860,20 +860,26 @@ define(function() {
                     }, "module-e registration timeout", 1000);
 
                     runs(function() {
-                        expect(typeof eModule === "object").toBeTruthy();
+                        expect(typeof eModule === "object" && eModule !== null).toBeTruthy();
                         expect(eModule.project).toEqual("qux");
                         expect(eModule.name).toEqual("module-e");
                     });
                 });
 
-                it("submodule module-a should be loaded after manulay loading module-e using standard require", function() {
-                    expect(typeof eModule.getModuleA() === "object").toBeTruthy();
-                    expect(eModule.getModuleA().project).toEqual("qux");
-                    expect(eModule.getModuleA().name).toEqual("module-a");
+                it("module-e submodule module-a should be loaded after using standard require", function() {
+                    waitsFor(function() {
+                        return eModule.getModuleA() !== null;
+                    }, "module-e submodule A registration timeout", 1000);
+
+                    runs(function() {
+                        expect(typeof eModule.getModuleA() === "object" && eModule !== null).toBeTruthy();
+                        expect(eModule.getModuleA().project).toEqual("qux");
+                        expect(eModule.getModuleA().name).toEqual("module-a");
+                    });
                 });
 
                 it("submodule module-b should be loaded after manulay loading module-e using standard require", function() {
-                    expect(typeof eModule.getModuleA().submodule === "object").toBeTruthy();
+                    expect(typeof eModule.getModuleA().submodule === "object" && eModule.getModuleA().submodule !== null).toBeTruthy();
                     expect(eModule.getModuleA().submodule.project).toEqual("qux");
                     expect(eModule.getModuleA().submodule.name).toEqual("module-b");
                 });
