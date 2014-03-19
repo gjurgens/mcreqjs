@@ -11,8 +11,8 @@ The first thing, is to register the project with an `id`.
 <html>
   <head>
     <title>mcReqJs Sample</title>
-    <script type="text/javascript" src="lib/require-1.0.7.js"></script>
-    <script type="text/javascript" src="lib/mcreqjs-0.0.1.js"></script>
+    <script type="text/javascript" src="lib/require-2.0.6.min.js"></script>
+    <script type="text/javascript" src="lib/mcreqjs-1.0.0.js"></script>
   </head>
   <h1>mcRequireJs</h1>
   <body>

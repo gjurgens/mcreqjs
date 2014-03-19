@@ -1,7 +1,7 @@
 /*
  * mcReqJs
  *
- * Copyright (c) 2013 Gabriel Jürgens
+ * Copyright (c) 2014 Gabriel Jürgens
  * Licensed under the MIT license.
  */
 
