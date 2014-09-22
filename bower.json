@@ -1,0 +1,24 @@
+{
+  "name": "mcreqjs",
+  "version": "1.0.1",
+  "homepage": "https://github.com/gjurgens/mcreqjs",
+  "authors": [
+    "Gabriel Jürgens <gabriel@jurgens.com.ar>"
+  ],
+  "description": "Handle multiple RequireJS configurations on the same environment.",
+  "main": "dist/mcreqjs.min.js",
+  "keywords": [
+    "require.js"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "requirejs": ">=2.1.10"
+  },  
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
