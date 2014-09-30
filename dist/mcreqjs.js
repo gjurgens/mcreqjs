@@ -1,5 +1,5 @@
 /*!
- * mcReqJs - v1.0.2 - 2014-09-30
+ * mcReqJs - v1.0.3 - 2014-09-30
  * (Handle mutiple projects using different RequireJs configuration and context on the same ambient)
  *
  * Author: Gabriel Jurgens (https://github.com/gjurgens/)
