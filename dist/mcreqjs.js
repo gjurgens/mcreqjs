@@ -1,5 +1,5 @@
 /*!
- * mcReqJs - v1.0.3 - 2014-09-30
+ * mcReqJs - v1.1.0 - 2014-12-18
  * (Handle mutiple projects using different RequireJs configuration and context on the same ambient)
  *
  * Author: Gabriel Jurgens (https://github.com/gjurgens/)
@@ -127,10 +127,18 @@
 				return projects[params.projectId].requireHandle(params.modules,params.callback,params.onError);
 			};
 
+			var inject = function(projectId, name, callback) {
+				if(projects[projectId] === undefined) {screamAndAbort("inject","projectId: '" + projectId +"' is not registered.");}
+				if(!(callback === undefined || typeof callback === "function")) {screamAndAbort("inject","Invalid callback type. Should be a function.");}
+				if(!(name === undefined || typeof name === "string")) {screamAndAbort("inject","Invalid name type. Should be a string.");}
+				require.s.contexts[projectId].defined[name] = callback();
+			};
+
 			return {
 				"register":register,
 				"load":load,
-				"isRegistered":isRegistered
+				"isRegistered":isRegistered,
+				"inject":inject
 			};
 		})();
 		if(typeof global !== 'undefined') {global.mcReqJs = root.mcReqJs;}
