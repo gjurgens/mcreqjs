@@ -32,6 +32,9 @@ define(function() {
             it("isRegistered is a function",function() {
                 expect(typeof mcReqJs.isRegistered).toEqual("function");
             });
+            it("inject is a function",function() {
+                expect(typeof mcReqJs.inject).toEqual("function");
+            });
         });
         
         describe("Project foo",function() {
@@ -117,12 +120,13 @@ define(function() {
                 runs(function(){
                     mcReqJs.load({
                         "projectId":"foo",
-                        "modules":"module-c",
-                        "callback":function(moduleC) {
+                        "modules":["module-c"],
+                        "callback":function(moduleC,moduleI) {
                             cModule = moduleC !== undefined ? moduleC:null;
                         }
                     });
                 });
+
                 it("module-c should be loaded after manulay load it", function() {
                     waitsFor(function() {
                         return cModule !== null;
@@ -141,7 +145,6 @@ define(function() {
                     expect(cModule.submodule.name).toEqual("module-b");
                 });
             });
-
 
             describe("manualy loaded module D from folder baz", function(){
                 it("module-d should not be loaded before manulay loading", function() {
